@@ -1,0 +1,49 @@
+## Abbreviation mapping for parquet files
+# keys are short abbreviations you can use in the notebook
+# values are filenames (relative to data/parquet)
+
+dem: demographics_maindata.parquet
+
+# Diagnosis tables
+diag_clinvar_med: diagnosis_clinvarsymedical.parquet
+diag_family: diagnosis_familyhistory_rg.parquet
+diag_gaa: diagnosis_gaaenzymeactivityrg.parquet
+diag_geneprotein: diagnosis_geneproteinrg.parquet
+diag: diagnosis_maindata.parquet
+
+# Discontinuations
+disc: discontinuation_maindata.parquet
+
+# Encounter-level tables (enc prefix)
+enc: encounter_maindata.parquet
+enc_assist: encounter_assistivedevice_rg.parquet
+enc_ft: encounter_feedingtubeplacement_rg.parquet
+enc_fr: encounter_fracturerepair_rg.parquet
+enc_fundop: encounter_fundoplicationnissen_rg.parquet
+enc_hosp: encounter_hospitalization_rg.parquet
+enc_icd: encounter_icdplacement_rg.parquet
+enc_med: encounter_medication_rg.parquet
+enc_mb: encounter_musclebiopsy_rg.parquet
+enc_npi: encounter_npi_rg.parquet
+enc_pulm: encounter_pulmonarydevice_rg.parquet
+enc_scol: encounter_scoliosissurgery_rg.parquet
+enc_spinraza: encounter_spinrazamaintenancedose_rg.parquet
+enc_surg_other: encounter_surgeryother_rg.parquet
+enc_tendon: encounter_tendonreleasesurgery_rg.parquet
+enc_trach: encounter_tracheostomy_rg.parquet
+enc_trial: encounter_trialdetails.parquet
+
+# Log tables
+log: log_maindata.parquet
+log_assist: log_assistivedevice_rg.parquet
+log_card: log_cardiacdevice_rg.parquet
+log_ert: log_enzymereplacementtherapy_rg.parquet
+log_ert_ab: log_ertantibodytiters_rg.parquet
+log_hosp: log_hospitalization_rg.parquet
+log_med: log_medication_rg.parquet
+log_pulm: log_pulmonarydevice_rg.parquet
+log_surg: log_surgery_rg.parquet
+
+# misc aliases kept for backwards compatibility
+enc_med_rg: encounter_medication_rg.parquet
+diag_all: diagnosis_maindata.parquet

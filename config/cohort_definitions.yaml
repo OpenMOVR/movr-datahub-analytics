@@ -1,0 +1,271 @@
+# Cohort Definitions
+#
+# Predefined cohorts for common analyses.
+# These definitions are used by CohortManager to create reproducible cohorts.
+#
+# Cohort Types:
+#   - base: Starting cohort with enrollment validation
+#   - filtered: Derived from another cohort with filters applied
+#
+# Filter Types:
+#   - Exact match: field: "value"
+#   - Multiple values: field: ["value1", "value2"]
+#   - Range: field: {min: X, max: Y}
+#   - Custom: custom_filter: "expression"
+#
+# Field Resolution:
+#   Filters use canonical field names (e.g., "disease") which are resolved
+#   to actual column names (e.g., "dstype") via field_mappings.yaml
+
+# =============================================================================
+# BASE COHORTS
+# =============================================================================
+cohorts:
+  # Base enrolled cohort - all participants with required forms
+  - name: base
+    type: base
+    description: All enrolled participants with demographics, diagnosis, and encounter data
+    require_forms:
+      - demographics_maindata
+      - diagnosis_maindata
+      - encounter_maindata
+
+# =============================================================================
+# REGISTRY COHORTS (Priority 1)
+# =============================================================================
+# USNDR vs DataHub filtering based on 'usndr' field:
+#   - usndr = True  -> USNDR participant
+#   - usndr = None/NA/missing -> DataHub participant
+
+  # USNDR cohort - participants from US Neuromuscular Disease Registry
+  - name: usndr
+    type: filtered
+    source: base
+    description: USNDR participants only (usndr field = True)
+    filters:
+      registry: true
+    notes: |
+      USNDR (US Neuromuscular Disease Registry) is a subset of MOVR DataHub.
+      These participants were enrolled through the USNDR program.
+
+  # DataHub cohort - participants NOT in USNDR
+  - name: datahub
+    type: filtered
+    source: base
+    description: DataHub participants only (usndr field is not True)
+    filters:
+      registry: false
+    notes: |
+      DataHub participants are those enrolled directly through MOVR DataHub,
+      not through the USNDR program. Filter includes usndr = None, NA, or missing.
+
+# =============================================================================
+# DISEASE-SPECIFIC COHORTS (Priority 2)
+# =============================================================================
+# Disease filtering based on 'dstype' field.
+# Valid values: ALS, SMA, LGMD, DMD, BMD, FSHD, Pompe
+
+  # --- ALS ---
+  - name: als
+    type: filtered
+    source: base
+    description: All ALS (Amyotrophic Lateral Sclerosis) patients
+    filters:
+      disease: ALS
+
+  - name: als_usndr
+    type: filtered
+    source: als
+    description: ALS patients from USNDR
+    filters:
+      registry: true
+
+  # --- SMA ---
+  - name: sma
+    type: filtered
+    source: base
+    description: All SMA (Spinal Muscular Atrophy) patients
+    filters:
+      disease: SMA
+
+  - name: sma_usndr
+    type: filtered
+    source: sma
+    description: SMA patients from USNDR
+    filters:
+      registry: true
+
+  - name: sma_pediatric
+    type: filtered
+    source: sma
+    description: Pediatric SMA patients (age 0-18)
+    filters:
+      age:
+        min: 0
+        max: 18
+
+  - name: sma_adults
+    type: filtered
+    source: sma
+    description: Adult SMA patients (age 18+)
+    filters:
+      age:
+        min: 18
+
+  # --- DMD ---
+  - name: dmd
+    type: filtered
+    source: base
+    description: All DMD (Duchenne Muscular Dystrophy) patients
+    filters:
+      disease: DMD
+
+  - name: dmd_usndr
+    type: filtered
+    source: dmd
+    description: DMD patients from USNDR
+    filters:
+      registry: true
+
+  - name: dmd_pediatric
+    type: filtered
+    source: dmd
+    description: Pediatric DMD patients (age 0-18)
+    filters:
+      age:
+        min: 0
+        max: 18
+
+  - name: dmd_adults
+    type: filtered
+    source: dmd
+    description: Adult DMD patients (age 18+)
+    filters:
+      age:
+        min: 18
+
+  # --- BMD ---
+  - name: bmd
+    type: filtered
+    source: base
+    description: All BMD (Becker Muscular Dystrophy) patients
+    filters:
+      disease: BMD
+
+  - name: bmd_usndr
+    type: filtered
+    source: bmd
+    description: BMD patients from USNDR
+    filters:
+      registry: true
+
+  # --- LGMD ---
+  - name: lgmd
+    type: filtered
+    source: base
+    description: All LGMD (Limb-Girdle Muscular Dystrophy) patients
+    filters:
+      disease: LGMD
+
+  - name: lgmd_usndr
+    type: filtered
+    source: lgmd
+    description: LGMD patients from USNDR
+    filters:
+      registry: true
+
+  # --- FSHD ---
+  - name: fshd
+    type: filtered
+    source: base
+    description: All FSHD (Facioscapulohumeral Dystrophy) patients
+    filters:
+      disease: FSHD
+
+  - name: fshd_usndr
+    type: filtered
+    source: fshd
+    description: FSHD patients from USNDR
+    filters:
+      registry: true
+
+  # --- Pompe ---
+  - name: pompe
+    type: filtered
+    source: base
+    description: All Pompe Disease patients
+    filters:
+      disease: Pompe
+
+  - name: pompe_usndr
+    type: filtered
+    source: pompe
+    description: Pompe patients from USNDR
+    filters:
+      registry: true
+
+# =============================================================================
+# MULTI-DISEASE COHORTS
+# =============================================================================
+# For analyses across multiple disease types
+
+  # Dystrophinopathies (DMD + BMD)
+  - name: dystrophinopathy
+    type: filtered
+    source: base
+    description: All dystrophinopathy patients (DMD and BMD combined)
+    filters:
+      disease:
+        - DMD
+        - BMD
+
+  # Muscular Dystrophies (DMD + BMD + LGMD + FSHD)
+  - name: muscular_dystrophy
+    type: filtered
+    source: base
+    description: All muscular dystrophy patients
+    filters:
+      disease:
+        - DMD
+        - BMD
+        - LGMD
+        - FSHD
+
+# =============================================================================
+# DEMOGRAPHIC COHORTS
+# =============================================================================
+
+  - name: pediatric
+    type: filtered
+    source: base
+    description: All pediatric patients (age 0-18)
+    filters:
+      age:
+        min: 0
+        max: 18
+
+  - name: adults
+    type: filtered
+    source: base
+    description: All adult patients (age 18+)
+    filters:
+      age:
+        min: 18
+
+  - name: males
+    type: filtered
+    source: base
+    description: All male patients
+    filters:
+      gender: Male
+
+  - name: females
+    type: filtered
+    source: base
+    description: All female patients
+    filters:
+      gender: Female
+
+---
+# Created By: Andre Daniel Paredes
+# Last Updated: 2025-11-21

@@ -1,0 +1,71 @@
+# Data files (NEVER commit patient data or PHI)
+data/
+source-movr-data/
+*.parquet
+*.xlsx
+*.xls
+*.csv
+
+# PHI-specific files
+*_PHI.*
+*PHI*
+*phi*
+
+# Cache
+.cache/
+*.pkl
+*.pickle
+
+# Output
+output/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+
+# Local config (user-specific settings)
+config/local.yaml
+config/local.json
+config/*_local.*
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/

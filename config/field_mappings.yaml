@@ -1,0 +1,189 @@
+# Field Mappings Configuration
+#
+# This file defines canonical field names and their mappings to actual database columns.
+# Used by CohortManager and other components for consistent field resolution.
+#
+# Format:
+#   canonical_name:
+#     source_table: <table where field lives>
+#     source_field: <actual column name in source table>
+#     fallbacks: [list of alternative column names to try]
+#     description: <human readable description>
+#     derived: true/false (if field needs calculation)
+#     derivation: <formula or method for derived fields>
+
+# =============================================================================
+# CORE IDENTITY FIELDS
+# =============================================================================
+fields:
+  # Patient identifier - primary key across all tables
+  patient_id:
+    source_table: demographics_maindata
+    source_field: FACPATID
+    fallbacks:
+      - PATIENT_DISPLAY_ID
+      - MASTER_PATIENT_ID
+      - PATIENT_ID
+      - PAT_ID
+      - PARTICIPANT_ID
+    description: Primary participant identifier
+
+  # Disease type - what condition the patient has
+  # Values: ALS, SMA, LGMD, DMD, BMD, FSHD, Pompe
+  disease:
+    source_table: demographics_maindata
+    source_field: dstype
+    fallbacks:
+      - DISEASE
+      - DIAGNOSIS
+      - PRIMARY_DIAGNOSIS
+      - DX
+    description: Disease type classification
+    valid_values:
+      - ALS
+      - SMA
+      - LGMD
+      - DMD
+      - BMD
+      - FSHD
+      - Pompe
+
+  # Registry source - USNDR vs DataHub
+  # True = USNDR participant, anything else (None, NA, missing) = DataHub
+  registry:
+    source_table: demographics_maindata
+    source_field: usndr
+    fallbacks:
+      - REGISTRY
+      - DATA_SOURCE
+      - SOURCE
+    description: Registry source (True=USNDR, else=DataHub)
+    notes: |
+      - True value indicates USNDR participant
+      - None, NA, missing, or any other value indicates DataHub participant
+      - Use is_usndr() helper for boolean filtering
+
+  # Gender/Sex
+  # Values: Male, Female, Unspecified, Non-binary, Unknown
+  gender:
+    source_table: demographics_maindata
+    source_field: gender
+    fallbacks:
+      - sex
+      - SEX
+      - GENDER
+      - BIOLOGICAL_SEX
+    description: Patient gender/sex
+    valid_values:
+      - Male
+      - Female
+      - Unspecified
+      - Non-binary
+      - Unknown
+
+# =============================================================================
+# DATE FIELDS
+# =============================================================================
+
+  # Date of birth - used for age calculation
+  birth_date:
+    source_table: demographics_maindata
+    source_field: dob
+    fallbacks:
+      - dob1
+      - BIRTH_DATE
+      - DATE_OF_BIRTH
+    precision_field: dob.P
+    description: Patient date of birth
+
+  # Enrollment date
+  enrollment_date:
+    source_table: demographics_maindata
+    source_field: enroldt
+    fallbacks:
+      - ENROLLMENT_DATE
+      - ENROLL_DATE
+      - CONSENT_DATE
+      - FIRST_VISIT_DATE
+      - BASELINE_DATE
+    precision_field: enroldt.P
+    description: Date of enrollment into registry
+
+  # Encounter date
+  encounter_date:
+    source_table: encounter_maindata
+    source_field: encntdt
+    fallbacks:
+      - ENCOUNTER_DATE
+      - VISIT_DATE
+      - CASE_DATE
+      - DATE
+      - EXAM_DATE
+    precision_field: encntdt.P
+    description: Date of clinical encounter
+
+# =============================================================================
+# DERIVED FIELDS (calculated, not stored)
+# =============================================================================
+
+  # Age - DERIVED from dob
+  # NOTE: This field does not exist in source data and must be calculated
+  age:
+    source_table: demographics_maindata
+    source_field: null  # Does not exist - must be derived
+    fallbacks:
+      - AGE
+      - AGE_YEARS
+      - CURRENT_AGE
+    description: Patient age in years (calculated from dob)
+    derived: true
+    derivation: |
+      Calculated as: (reference_date - dob) / 365.25
+      Default reference_date is today's date.
+      For encounter-specific age, use encounter date as reference.
+
+# Disease code standardization
+disease_codes:
+  DMD:
+    - DMD
+    - Duchenne
+    - Duchenne Muscular Dystrophy
+  SMA:
+    - SMA
+    - Spinal Muscular Atrophy
+  BMD:
+    - BMD
+    - Becker
+    - Becker Muscular Dystrophy
+  LGMD:
+    - LGMD
+    - Limb-Girdle
+    - Limb Girdle Muscular Dystrophy
+  CMD:
+    - CMD
+    - Congenital Muscular Dystrophy
+  FSHD:
+    - FSHD
+    - Facioscapulohumeral
+  MM:
+    - MM
+    - Myotonic Dystrophy
+    - Myotonic
+  POMPE:
+    - Pompe
+    - Pompe Disease
+    - GSD2
+
+# Registry identifiers
+registry_codes:
+  datahub:
+    - MOVR
+    - DataHub
+    - MOVR DataHub
+  usndr:
+    - USNDR
+    - US-NDR
+
+# -----------------------------------------------------------------------------
+# Created By: Andre Daniel Paredes
+# Last Updated: 2025-11-21

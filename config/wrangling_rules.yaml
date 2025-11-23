@@ -1,0 +1,64 @@
+# MOVR Data Wrangling Rules
+# See DATA_WRANGLING_RULES.md for detailed documentation
+
+rules:
+  # Deduplication rules
+  - name: "deduplicate_participant_level"
+    tables:
+      - "demographics_maindata"
+      - "discontinuation_maindata"
+    action: "drop_duplicates"
+    subset: ["FACPATID"]
+    keep: "first"
+
+  - name: "deduplicate_visit_level"
+    tables:
+      - "diagnosis_maindata"
+      - "log_maindata"
+    action: "drop_duplicates"
+    subset: ["FACPATID", "CASE_ID"]
+    keep: "first"
+
+  - name: "deduplicate_encounter_forms"
+    tables:
+      - "encounter_maindata"
+    action: "drop_duplicates"
+    subset: ["FACPATID", "CASE_ID", "FORM_NAME"]
+    keep: "first"
+
+  # Missing value handling
+  - name: "standardize_missing"
+    tables: ["all"]
+    action: "replace_missing"
+    values: ["N/A", "NA", "Unknown", "", " ", "NULL"]
+    replace_with: null
+
+  # Data type enforcement
+  - name: "enforce_string_ids"
+    tables: ["all"]
+    action: "enforce_dtype"
+    columns: ["FACPATID", "CASE_ID", "FACILITY_DISPLAY_ID"]
+    dtype: "string"
+
+  # Date parsing
+  - name: "parse_dates"
+    tables: ["all"]
+    action: "parse_dates"
+    columns:
+      - "ADMIT_DATE"
+      - "DISCHARGE_DATE"
+      - "BIRTH_DATE"
+      - "DEATH_DATE"
+      - "ENCOUNTER_DATE"
+      - "DIAGNOSIS_DATE"
+    formats: ["%Y-%m-%d", "%m/%d/%Y"]
+    on_error: "coerce"
+
+  # Value validation
+  - name: "validate_age_range"
+    tables: ["demographics_maindata"]
+    action: "validate_range"
+    column: "AGE"
+    min: 0
+    max: 120
+    on_error: "flag"

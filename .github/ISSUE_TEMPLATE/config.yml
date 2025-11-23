@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/OpenMOVR/movr-datahub-analytics#documentation
+    about: Check documentation before opening an issue
+  - name: MOVR Data Access
+    url: https://www.mda.org/research
+    about: For data access requests, contact MDA directly

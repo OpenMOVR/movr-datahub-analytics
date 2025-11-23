@@ -1,0 +1,76 @@
+data_sources:
+- name: demographics
+  excel_path: ../source-movr-data/Demographics_noPHI.xlsx
+  sheet_mappings:
+    Main Data: demographics_maindata
+  skip_sheets: []
+- name: log
+  excel_path: ../source-movr-data/Log.xlsx
+  sheet_mappings:
+    Main Data: log_maindata
+    Medication Repeat Group: log_medication_rg
+    Hospitalization Repeat Group: log_hospitalization_rg
+    Assistive Device Repeat Group: log_assistivedevice_rg
+    Pulmonary Device Repeat Group: log_pulmonarydevice_rg
+    Surgery Repeat Group: log_surgery_rg
+    Cardiac Device Repeat Group: log_cardiacdevice_rg
+    Enzyme Replacement Therapy Repe: log_enzymereplacementtherapy_rg
+    ERT Antibody Titers Repeat Grou: log_ertantibodytiters_rg
+  skip_sheets: []
+- name: encounter
+  excel_path: ../source-movr-data/Encounter.xlsx
+  sheet_mappings:
+    Main Data: encounter_maindata
+    Medication Repeat Group: encounter_medication_rg
+    Trial Details: encounter_trialdetails
+    Assistive Device Repeat Group: encounter_assistivedevice_rg
+    Fracture Repair Repeat Group: encounter_fracturerepair_rg
+    Muscle Biopsy Repeat Group: encounter_musclebiopsy_rg
+    Feeding Tube Placement Repeat G: encounter_feedingtubeplacement_rg
+    NPI Repeat Group: encounter_npi_rg
+    Surgery Other Repeat Group: encounter_surgeryother_rg
+    Scoliosis Surgery Repeat Group: encounter_scoliosissurgery_rg
+    Fundoplication Nissen Repeat G: encounter_fundoplicationnissen_rg
+    Tendon Release Surgery Repeat G: encounter_tendonreleasesurgery_rg
+    Pulmonary Device Repeat Group: encounter_pulmonarydevice_rg
+    Hospitalization Repeat Group: encounter_hospitalization_rg
+    Spinraza Maintenance Dose Repea: encounter_spinrazamaintenancedose_rg
+    Tracheostomy Repeat Group: encounter_tracheostomy_rg
+    ICD Placement Repeat Group: encounter_icdplacement_rg
+  skip_sheets: []
+- name: discontinuation
+  excel_path: ../source-movr-data/Discontinuation.xlsx
+  sheet_mappings:
+    Main Data: discontinuation_maindata
+  skip_sheets: []
+- name: diagnosis
+  excel_path: ../source-movr-data/Diagnosis.xlsx
+  sheet_mappings:
+    Main Data: diagnosis_maindata
+    Family History Repeat Group: diagnosis_familyhistory_rg
+    Clinvar Symedical: diagnosis_clinvarsymedical
+    Geneprotein RG: diagnosis_geneproteinrg
+    GAA enzyme activity RG: diagnosis_gaaenzymeactivityrg
+  skip_sheets: []
+wrangling:
+  strictness: permissive
+  date_formats:
+  - '%Y-%m-%d'
+  - '%m/%d/%Y'
+  - '%d/%m/%Y'
+  missing_values:
+  - ''
+  - NA
+  - N/A
+  - 'NULL'
+  - Unknown
+paths:
+  data_dir: data
+  output_dir: output
+  parquet_dir: data/parquet
+audit:
+  enabled: true
+  log_dir: data/.audit
+metadata:
+  data_dictionary_available: true
+  field_mappings_file: config/field_mappings.yaml

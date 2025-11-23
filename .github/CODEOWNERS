@@ -1,0 +1,28 @@
+# CODEOWNERS - MOVR DataHub Analytics
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# All pull requests require approval from @ADPAREDES before merging.
+# This applies to all files in the repository.
+
+# Default owner for everything
+* @ADPAREDES
+
+# Core source code
+/src/ @ADPAREDES
+
+# Configuration files
+/config/ @ADPAREDES
+
+# Data wrangling rules and proposals
+/proposals/ @ADPAREDES
+DATA_WRANGLING_RULES.md @ADPAREDES
+
+# Documentation
+/docs/ @ADPAREDES
+*.md @ADPAREDES
+
+# Tests
+/tests/ @ADPAREDES
+
+# Plugins
+/plugins/ @ADPAREDES

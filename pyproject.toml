@@ -1,0 +1,122 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "movr-datahub-analytics"
+version = "0.1.0"
+description = "Clinical data analytics framework for MOVR registry data"
+authors = [
+    {name = "Andre Daniel Paredes", email = "adparedes@proton.me"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+keywords = ["clinical-data", "analytics", "parquet", "cohort-analysis", "movr", "neuromuscular"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "pandas>=2.0.0",
+    "pyarrow>=12.0.0",
+    "pyyaml>=6.0",
+    "pydantic>=2.0.0",
+    "openpyxl>=3.1.0",
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "loguru>=0.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+
+viz = [
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "plotly>=5.14.0",
+]
+
+notebooks = [
+    "jupyter>=1.0.0",
+    "ipywidgets>=8.0.0",
+    "notebook>=7.0.0",
+]
+
+all = ["movr-datahub-analytics[dev,viz,notebooks]"]
+
+[project.urls]
+Homepage = "https://github.com/openmovr/movr-datahub-analytics"
+Documentation = "https://github.com/openmovr/movr-datahub-analytics#documentation"
+Repository = "https://github.com/openmovr/movr-datahub-analytics"
+Issues = "https://github.com/openmovr/movr-datahub-analytics/issues"
+
+[project.scripts]
+movr = "movr.cli.main:cli"
+
+[tool.setuptools]
+packages = ["movr"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+movr = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | \.pytest_cache
+  | build
+  | dist
+  | data
+  | output
+)/
+'''
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "--cov=src/movr --cov-report=html --cov-report=term-missing --verbose"
+
+[tool.jupytext]
+formats = "ipynb,py:percent"
+notebook_metadata_filter = "-kernelspec,-language_info"
+
+[tool.coverage.run]
+source = ["src/movr"]
+omit = ["*/tests/*", "*/__pycache__/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]

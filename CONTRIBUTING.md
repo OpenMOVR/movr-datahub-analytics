@@ -85,18 +85,33 @@ pytest --cov=movr
 pytest tests/test_specific.py
 ```
 
-### 5. Submit Pull Request
+### 5. Submit and Merge Pull Request
 
 ```bash
 # Commit your changes
 git add .
 git commit -m "Add feature: description"
 
-# Push to your fork
+# Push your branch
 git push origin feature/your-feature-name
-
-# Create pull request on GitHub
 ```
+
+**Create and merge the PR:**
+
+```bash
+# Option 1: GitHub CLI (recommended)
+gh pr create --title "feat: your feature" --body "Description"
+gh pr merge --merge  # CODEOWNER can merge immediately, others need approval
+
+# Option 2: Web UI
+# 1. Go to GitHub and click "Create pull request"
+# 2. Fill out the PR template
+# 3. Click "Merge pull request" (CODEOWNER can merge, others need approval)
+```
+
+**Current:** PRs require 1 approval before merge. CODEOWNER can bypass and merge without approval.
+
+**Future:** When the project scales, CODEOWNER must also get approval before merging.
 
 ---
 
@@ -664,29 +679,29 @@ Once accepted:
 
 ## Review Process
 
+### Current State
+
+- **PRs require 1 approval** before merge
+- **CODEOWNER can bypass** approval requirement
+- **Collaborators must get approval** from CODEOWNER or other reviewers
+
 ### Review Timeline
 
-- **Initial Response**: Within 3 business days
-- **RFC Review**: 1-2 weeks for feedback period
-- **Code Review**: 1 week for standard PRs
-- **Bug Fixes**: Prioritized, faster review
+- **Standard PRs**: 3 business days
+- **Bug fixes**: Prioritized, faster review
+- **RFCs**: 1-2 weeks for discussion
 
 ### Review Criteria
 
-Reviewers check:
-- ✅ Code quality and style
-- ✅ Test coverage
-- ✅ Documentation completeness
-- ✅ Backwards compatibility
-- ✅ Performance impact
-- ✅ Security considerations
+- Code quality and style (`black`, `isort`, `mypy` passing)
+- Test coverage (>80% preferred)
+- Documentation updated
+- No breaking changes (or migration guide provided)
+- No PHI or sensitive data
 
-### Addressing Review Comments
+### Future State
 
-- Be open to feedback
-- Ask questions if unclear
-- Make requested changes
-- Re-request review when done
+When the project scales, CODEOWNER must also get approval before merging.
 
 ---
 

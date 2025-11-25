@@ -1,5 +1,5 @@
 # Data files (NEVER commit patient data or PHI)
-data/
+/data/
 source-movr-data/
 *.parquet
 *.xlsx
